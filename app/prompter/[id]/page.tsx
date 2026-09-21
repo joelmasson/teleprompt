@@ -6,11 +6,13 @@ import {
   Pause,
   Play,
   SkipBack,
+  SkipForward,
   Minus,
   Plus,
   MonitorUp,
   ArrowLeft,
   Gauge,
+  Settings2,
 } from "lucide-react";
 import {
   getCurrentUser,
@@ -38,6 +40,7 @@ export default function PrompterPage() {
   const [lineSpacing, setLineSpacing] = useState(1.5);
   const [alignment, setAlignment] = useState<"left" | "center">("center");
   const [mirrorMode, setMirrorMode] = useState(false);
+  const [showControls, setShowControls] = useState(true);
 
   useEffect(() => {
     const currentUser = getCurrentUser();
@@ -95,6 +98,7 @@ export default function PrompterPage() {
   ]);
 
   useEffect(() => {
+    const handlePointerMove = () => setShowControls(true);
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.code === "Space") {
         event.preventDefault();
@@ -118,12 +122,21 @@ export default function PrompterPage() {
       if (event.key === "Escape") router.push(`/app/${scriptId}`);
     };
 
+    window.addEventListener("pointermove", handlePointerMove);
     window.addEventListener("keydown", handleKeyDown);
 
     return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, [router, scriptId]);
+
+  useEffect(() => {
+    if (!showControls) return;
+
+    const timer = window.setTimeout(() => setShowControls(false), 2500);
+    return () => window.clearTimeout(timer);
+  }, [showControls]);
 
   useEffect(() => {
     if (!script || !isPlaying) {
@@ -132,6 +145,7 @@ export default function PrompterPage() {
     }
 
     let lastTick = performance.now();
+    let previousScroll = scrollRef.current?.scrollTop ?? 0;
     const tick = (now: number) => {
       const element = scrollRef.current;
       if (!element) return;
@@ -140,6 +154,7 @@ export default function PrompterPage() {
       const pixelsPerSecond = getPixelsPerSecondFromWpm(speed);
       const distance = (pixelsPerSecond * delta) / 1000;
       element.scrollTop += distance;
+      previousScroll = element.scrollTop;
       lastTick = now;
 
       const position = clamp(
@@ -192,11 +207,10 @@ export default function PrompterPage() {
         </div>
       ) : null}
 
-      <div className="fixed inset-x-0 bottom-0 z-10 bg-black/90 backdrop-blur-sm">
-        <div
-          className="mx-auto flex max-w-5xl items-center justify-between gap-3 overflow-x-auto border-t border-white/10 px-4 pt-3"
-          style={{ paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))" }}
-        >
+      <div
+        className={`absolute inset-x-0 bottom-0 z-10 transition-opacity duration-200 ${showControls ? "opacity-100" : "opacity-0"}`}
+      >
+        <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 border-t border-white/10 bg-black/70 px-4 py-3 backdrop-blur-sm">
           <div className="flex items-center gap-2">
             <button
               type="button"
@@ -259,6 +273,13 @@ export default function PrompterPage() {
               className="rounded-full border border-white/15 bg-white/5 px-3 py-2 text-xs font-medium text-white"
             >
               Mirror {mirrorMode ? "ON" : "OFF"}
+            </button>
+            <button
+              type="button"
+              onClick={() => setShowControls((value) => !value)}
+              className="flex h-12 w-12 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white"
+            >
+              <Settings2 size={18} />
             </button>
             <button
               type="button"

@@ -1,6 +1,14 @@
-export function SaveStatus({ isSaving, isSaved }: { isSaving: boolean; isSaved: boolean }) {
+export function SaveStatus({
+  isSaving,
+  isSaved,
+}: {
+  isSaving: boolean;
+  isSaved: boolean;
+}) {
   if (isSaving) {
-    return <span className="text-xs font-medium text-neutral-500">Saving...</span>;
+    return (
+      <span className="text-xs font-medium text-neutral-500">Saving...</span>
+    );
   }
 
   if (isSaved) {

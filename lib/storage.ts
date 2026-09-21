@@ -1,4 +1,8 @@
-import { ScriptRecord, ScriptSettings, calculateWordCount } from "@/lib/teleprompt";
+import {
+  ScriptRecord,
+  ScriptSettings,
+  calculateWordCount,
+} from "@/lib/teleprompt";
 
 export type AuthUser = {
   id: string;
@@ -75,7 +79,10 @@ export function getScripts(): ScriptRecord[] {
 export function listScriptsForUser(userId: string): ScriptRecord[] {
   return getScripts()
     .filter((script) => script.user_id === userId)
-    .sort((a, b) => new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime());
+    .sort(
+      (a, b) =>
+        new Date(b.updated_at).getTime() - new Date(a.updated_at).getTime(),
+    );
 }
 
 export function saveScript(script: ScriptRecord) {

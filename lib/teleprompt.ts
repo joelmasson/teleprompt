@@ -29,7 +29,10 @@ export function calculateWordCount(content: string): number {
   return content.trim().split(/\s+/).filter(Boolean).length;
 }
 
-export function calculateReadingTime(words: number, wordsPerMinute = 140): number {
+export function calculateReadingTime(
+  words: number,
+  wordsPerMinute = 140,
+): number {
   if (!words) return 0;
   return Math.max(1, Math.ceil(words / wordsPerMinute));
 }
@@ -39,11 +42,11 @@ export function clamp(value: number, min: number, max: number): number {
 }
 
 export function getWpmFromPixelsPerSecond(speed: number): number {
-  return Math.round((speed / 6.5) * 10) / 10;
+  return Math.round((speed / 0.9) * 10) / 10;
 }
 
 export function getPixelsPerSecondFromWpm(wpm: number): number {
-  return Math.round((wpm * 6.5) * 10) / 10;
+  return Math.round(wpm * 0.9 * 10) / 10;
 }
 
 export function normalizeReadingPosition(value: number): number {

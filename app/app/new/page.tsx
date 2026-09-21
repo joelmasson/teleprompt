@@ -37,15 +37,25 @@ export default function NewScriptPage() {
       <div className="mx-auto max-w-4xl rounded-3xl border border-neutral-200 bg-white p-6 shadow-sm">
         <div className="mb-6 flex items-center justify-between gap-3">
           <div>
-            <p className="text-xs uppercase tracking-[0.2em] text-neutral-500">New script</p>
+            <p className="text-xs uppercase tracking-[0.2em] text-neutral-500">
+              New script
+            </p>
             <h1 className="mt-2 text-3xl font-semibold">Create a script</h1>
           </div>
 
           <div className="flex gap-2">
-            <button type="button" onClick={() => router.push("/app")} className="rounded-full border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700">
+            <button
+              type="button"
+              onClick={() => router.push("/app")}
+              className="rounded-full border border-neutral-300 px-4 py-2 text-sm font-medium text-neutral-700"
+            >
               Cancel
             </button>
-            <button type="button" onClick={handleSave} className="rounded-full bg-neutral-950 px-4 py-2 text-sm font-medium text-white">
+            <button
+              type="button"
+              onClick={handleSave}
+              className="rounded-full bg-neutral-950 px-4 py-2 text-sm font-medium text-white"
+            >
               Save
             </button>
           </div>
@@ -61,7 +71,11 @@ export default function NewScriptPage() {
           />
         </label>
 
-        {error ? <p className="mb-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
+        {error ? (
+          <p className="mb-4 rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+            {error}
+          </p>
+        ) : null}
 
         <textarea
           value={content}

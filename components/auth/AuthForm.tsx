@@ -2,7 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { ensureDemoUser, getUsers, saveUser, setCurrentUser } from "@/lib/storage";
+import {
+  ensureDemoUser,
+  getUsers,
+  saveUser,
+  setCurrentUser,
+} from "@/lib/storage";
 
 export function AuthForm({ mode }: { mode: "login" | "signup" }) {
   const router = useRouter();
@@ -19,11 +24,15 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
     try {
       const trimmedEmail = email.trim();
       if (!trimmedEmail || password.length < 6) {
-        throw new Error("Enter a valid email and password with at least six characters.");
+        throw new Error(
+          "Enter a valid email and password with at least six characters.",
+        );
       }
 
       const existingUsers = getUsers();
-      const foundUser = existingUsers.find((user) => user.email === trimmedEmail);
+      const foundUser = existingUsers.find(
+        (user) => user.email === trimmedEmail,
+      );
 
       if (mode === "signup") {
         if (foundUser) {
@@ -35,7 +44,10 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
         setCurrentUser(user);
       } else {
         const user = foundUser ?? ensureDemoUser();
-        if (user.email !== trimmedEmail && user.email !== "demo@teleprompt.local") {
+        if (
+          user.email !== trimmedEmail &&
+          user.email !== "demo@teleprompt.local"
+        ) {
           throw new Error("No account found for that email.");
         }
 
@@ -44,7 +56,11 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
 
       router.push("/app");
     } catch (submitError) {
-      setError(submitError instanceof Error ? submitError.message : "Authentication failed.");
+      setError(
+        submitError instanceof Error
+          ? submitError.message
+          : "Authentication failed.",
+      );
     } finally {
       setIsSubmitting(false);
     }
@@ -57,9 +73,13 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
           <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-neutral-950 text-xl font-bold text-white">
             T
           </div>
-          <h1 className="text-2xl font-semibold text-neutral-950">{mode === "login" ? "Welcome back" : "Create your account"}</h1>
+          <h1 className="text-2xl font-semibold text-neutral-950">
+            {mode === "login" ? "Welcome back" : "Create your account"}
+          </h1>
           <p className="mt-2 text-sm text-neutral-600">
-            {mode === "login" ? "Access your private script library." : "Sign up to save scripts and launch the teleprompter."}
+            {mode === "login"
+              ? "Access your private script library."
+              : "Sign up to save scripts and launch the teleprompter."}
           </p>
         </div>
 
@@ -86,20 +106,31 @@ export function AuthForm({ mode }: { mode: "login" | "signup" }) {
             />
           </label>
 
-          {error ? <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</p> : null}
+          {error ? (
+            <p className="rounded-xl border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">
+              {error}
+            </p>
+          ) : null}
 
           <button
             type="submit"
             disabled={isSubmitting}
             className="w-full rounded-xl bg-neutral-950 px-4 py-3 text-base font-medium text-white transition hover:bg-neutral-800 disabled:cursor-not-allowed disabled:opacity-60"
           >
-            {isSubmitting ? "Please wait..." : mode === "login" ? "Log in" : "Create account"}
+            {isSubmitting
+              ? "Please wait..."
+              : mode === "login"
+                ? "Log in"
+                : "Create account"}
           </button>
         </form>
 
         <p className="mt-5 text-center text-sm text-neutral-600">
           {mode === "login" ? "New here?" : "Already have an account?"}{" "}
-          <a href={mode === "login" ? "/signup" : "/login"} className="font-semibold text-neutral-900">
+          <a
+            href={mode === "login" ? "/signup" : "/login"}
+            className="font-semibold text-neutral-900"
+          >
             {mode === "login" ? "Create an account" : "Log in"}
           </a>
         </p>

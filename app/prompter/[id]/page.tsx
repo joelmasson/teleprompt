@@ -2,9 +2,29 @@
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { Pause, Play, SkipBack, SkipForward, Minus, Plus, MonitorUp, ArrowLeft, Gauge, Settings2 } from "lucide-react";
-import { getCurrentUser, getScriptById, persistReadingPosition, saveScript } from "@/lib/storage";
-import { clamp, getPixelsPerSecondFromWpm, getWpmFromPixelsPerSecond } from "@/lib/teleprompt";
+import {
+  Pause,
+  Play,
+  SkipBack,
+  SkipForward,
+  Minus,
+  Plus,
+  MonitorUp,
+  ArrowLeft,
+  Gauge,
+  Settings2,
+} from "lucide-react";
+import {
+  getCurrentUser,
+  getScriptById,
+  persistReadingPosition,
+  saveScript,
+} from "@/lib/storage";
+import {
+  clamp,
+  getPixelsPerSecondFromWpm,
+  getWpmFromPixelsPerSecond,
+} from "@/lib/teleprompt";
 
 export default function PrompterPage() {
   const params = useParams();
@@ -45,7 +65,9 @@ export default function PrompterPage() {
     setTimeout(() => {
       const element = scrollRef.current;
       if (!element) return;
-      const offset = found.last_position ? Math.max(0, element.scrollHeight * found.last_position) : 0;
+      const offset = found.last_position
+        ? Math.max(0, element.scrollHeight * found.last_position)
+        : 0;
       element.scrollTop = offset;
     }, 100);
   }, [router, scriptId]);
@@ -65,7 +87,15 @@ export default function PrompterPage() {
 
     saveScript(nextScript);
     setScript(nextScript);
-  }, [speed, fontSize, textWidth, lineSpacing, alignment, mirrorMode, script?.id]);
+  }, [
+    speed,
+    fontSize,
+    textWidth,
+    lineSpacing,
+    alignment,
+    mirrorMode,
+    script?.id,
+  ]);
 
   useEffect(() => {
     const handlePointerMove = () => setShowControls(true);
@@ -74,9 +104,12 @@ export default function PrompterPage() {
         event.preventDefault();
         setIsPlaying((value) => !value);
       }
-      if (event.key === "ArrowUp") setSpeed((value) => clamp(value + 10, 40, 260));
-      if (event.key === "ArrowDown") setSpeed((value) => clamp(value - 10, 40, 260));
-      if (event.key === "+" || event.key === "=") setFontSize((value) => clamp(value + 4, 18, 120));
+      if (event.key === "ArrowUp")
+        setSpeed((value) => clamp(value + 10, 20, 400));
+      if (event.key === "ArrowDown")
+        setSpeed((value) => clamp(value - 10, 20, 400));
+      if (event.key === "+" || event.key === "=")
+        setFontSize((value) => clamp(value + 4, 18, 120));
       if (event.key === "-") setFontSize((value) => clamp(value - 4, 18, 120));
       if (event.key === "Home") {
         const element = scrollRef.current;
@@ -125,7 +158,12 @@ export default function PrompterPage() {
       previousScroll = element.scrollTop;
       lastTick = now;
 
-      const position = clamp(element.scrollTop / Math.max(element.scrollHeight - element.clientHeight, 1), 0, 1);
+      const position = clamp(
+        element.scrollTop /
+          Math.max(element.scrollHeight - element.clientHeight, 1),
+        0,
+        1,
+      );
       persistReadingPosition(scriptId, position);
       animationRef.current = requestAnimationFrame(tick);
     };
@@ -170,16 +208,34 @@ export default function PrompterPage() {
         </div>
       ) : null}
 
-      <div className={`absolute inset-x-0 bottom-0 z-10 transition-opacity duration-200 ${showControls ? "opacity-100" : "opacity-0"}`}>
+      <div
+        className={`absolute inset-x-0 bottom-0 z-10 transition-opacity duration-200 ${showControls ? "opacity-100" : "opacity-0"}`}
+      >
         <div className="mx-auto flex max-w-5xl items-center justify-between gap-3 border-t border-white/10 bg-black/70 px-4 py-3 backdrop-blur-sm">
           <div className="flex items-center gap-2">
-            <button type="button" onClick={() => setIsPlaying((value) => !value)} className="flex h-12 w-12 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white">
+            <button
+              type="button"
+              onClick={() => setIsPlaying((value) => !value)}
+              className="flex h-12 w-12 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white"
+            >
               {isPlaying ? <Pause size={18} /> : <Play size={18} />}
             </button>
-            <button type="button" onClick={() => { const element = scrollRef.current; if (element) element.scrollTop = 0; setIsPlaying(false); }} className="flex h-12 w-12 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white">
+            <button
+              type="button"
+              onClick={() => {
+                const element = scrollRef.current;
+                if (element) element.scrollTop = 0;
+                setIsPlaying(false);
+              }}
+              className="flex h-12 w-12 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white"
+            >
               <SkipBack size={18} />
             </button>
-            <button type="button" onClick={() => router.push("/app")} className="flex h-12 w-12 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white">
+            <button
+              type="button"
+              onClick={() => router.push("/app")}
+              className="flex h-12 w-12 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white"
+            >
               <ArrowLeft size={18} />
             </button>
           </div>
@@ -187,21 +243,50 @@ export default function PrompterPage() {
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-2">
               <Gauge size={16} />
-              <input type="range" min="40" max="260" value={speed} onChange={(event) => setSpeed(Number(event.target.value))} className="w-28 accent-white" />
-              <span className="min-w-[52px] text-right text-xs font-medium text-white">{Math.round(wpm)} WPM</span>
+              <input
+                type="range"
+                min="20"
+                max="400"
+                value={speed}
+                onChange={(event) => setSpeed(Number(event.target.value))}
+                className="w-40 accent-white"
+                aria-label="Scrolling speed"
+              />
+              <span className="min-w-[52px] text-right text-xs font-medium text-white">
+                {Math.round(wpm)} WPM
+              </span>
             </div>
             <div className="flex items-center gap-2 rounded-full border border-white/15 bg-white/5 px-3 py-2">
               <Minus size={14} />
-              <input type="range" min="20" max="120" value={fontSize} onChange={(event) => setFontSize(Number(event.target.value))} className="w-20 accent-white" />
+              <input
+                type="range"
+                min="20"
+                max="120"
+                value={fontSize}
+                onChange={(event) => setFontSize(Number(event.target.value))}
+                className="w-20 accent-white"
+              />
               <Plus size={14} />
             </div>
-            <button type="button" onClick={() => setMirrorMode((value) => !value)} className="rounded-full border border-white/15 bg-white/5 px-3 py-2 text-xs font-medium text-white">
+            <button
+              type="button"
+              onClick={() => setMirrorMode((value) => !value)}
+              className="rounded-full border border-white/15 bg-white/5 px-3 py-2 text-xs font-medium text-white"
+            >
               Mirror {mirrorMode ? "ON" : "OFF"}
             </button>
-            <button type="button" onClick={() => setShowControls((value) => !value)} className="flex h-12 w-12 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white">
+            <button
+              type="button"
+              onClick={() => setShowControls((value) => !value)}
+              className="flex h-12 w-12 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white"
+            >
               <Settings2 size={18} />
             </button>
-            <button type="button" onClick={() => document.documentElement.requestFullscreen?.()} className="flex h-12 w-12 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white">
+            <button
+              type="button"
+              onClick={() => document.documentElement.requestFullscreen?.()}
+              className="flex h-12 w-12 items-center justify-center rounded-full border border-white/15 bg-white/5 text-white"
+            >
               <MonitorUp size={18} />
             </button>
           </div>

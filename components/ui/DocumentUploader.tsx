@@ -21,14 +21,18 @@ export function DocumentUploader({
     }
 
     if (extension === "docx") {
-      const result = await mammoth.extractRawText({ arrayBuffer: await file.arrayBuffer() });
+      const result = await mammoth.extractRawText({
+        arrayBuffer: await file.arrayBuffer(),
+      });
       return result.value;
     }
 
     throw new Error("Unsupported file type. Upload a .txt or .docx document.");
   };
 
-  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (
+    event: React.ChangeEvent<HTMLInputElement>,
+  ) => {
     const file = event.target.files?.[0];
     if (!file) return;
 
@@ -38,7 +42,9 @@ export function DocumentUploader({
     try {
       const text = await readFileAsText(file);
       if (!text.trim()) {
-        throw new Error("The uploaded document did not contain any readable text.");
+        throw new Error(
+          "The uploaded document did not contain any readable text.",
+        );
       }
 
       onScriptCreated({
@@ -46,7 +52,11 @@ export function DocumentUploader({
         content: text,
       });
     } catch (uploadError) {
-      setError(uploadError instanceof Error ? uploadError.message : "Unable to parse the uploaded file.");
+      setError(
+        uploadError instanceof Error
+          ? uploadError.message
+          : "Unable to parse the uploaded file.",
+      );
     } finally {
       setIsLoading(false);
       event.target.value = "";

@@ -2,7 +2,12 @@
 
 import { useEffect, useMemo, useState } from "react";
 import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { getCurrentUser, getScriptById, saveScript, updateScriptSettings } from "@/lib/storage";
+import {
+  getCurrentUser,
+  getScriptById,
+  saveScript,
+  updateScriptSettings,
+} from "@/lib/storage";
 import { calculateWordCount } from "@/lib/teleprompt";
 import { SaveStatus } from "@/components/ui/SaveStatus";
 
@@ -78,7 +83,9 @@ export default function ScriptEditorPage() {
       <div className="mx-auto max-w-6xl">
         <header className="mb-6 flex flex-col gap-4 rounded-3xl border border-neutral-200 bg-white p-5 shadow-sm md:flex-row md:items-center md:justify-between">
           <div className="flex-1">
-            <p className="text-xs uppercase tracking-[0.18em] text-neutral-500">Script editor</p>
+            <p className="text-xs uppercase tracking-[0.18em] text-neutral-500">
+              Script editor
+            </p>
             <input
               value={title}
               onChange={(event) => setTitle(event.target.value)}

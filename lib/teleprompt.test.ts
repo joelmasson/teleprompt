@@ -22,8 +22,8 @@ describe("teleprompt utilities", () => {
   });
 
   it("converts speed values", () => {
-    expect(getWpmFromPixelsPerSecond(130)).toBeCloseTo(20, 1);
-    expect(getPixelsPerSecondFromWpm(20)).toBeCloseTo(130, 1);
+    expect(getWpmFromPixelsPerSecond(108)).toBeCloseTo(120, 1);
+    expect(getPixelsPerSecondFromWpm(120)).toBeCloseTo(108, 1);
   });
 
   it("normalizes reading positions", () => {
